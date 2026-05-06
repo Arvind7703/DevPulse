@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime  @default(now())
+
+  projects     Project[]
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  name      String
+  apiKey    String   @unique @default(cuid())
+  userId    String
+  createdAt DateTime @default(now())
+
+  user      User       @relation(fields: [userId], references: [id])
+  metrics   Metric[]
+  appErrors AppError[]
+  digests   Digest[]
+}
+
+model Metric {
+  id         String   @id @default(cuid())
+  endpoint   String
+  method     String
+  statusCode Int
+  duration   Float
+  timestamp  DateTime @default(now())
+  projectId  String
+
+  project    Project  @relation(fields: [projectId], references: [id])
+}
+
+model AppError {
+  id          String   @id @default(cuid())
+  message     String
+  stack       String?
+  resolved    Boolean  @default(false)
+  count       Int      @default(1)
+  firstSeen   DateTime @default(now())
+  lastSeen    DateTime @updatedAt
+  projectId   String
+
+  project     Project  @relation(fields: [projectId], references: [id])
+}
+
+model Digest {
+  id        String   @id @default(cuid())
+  content   String
+  weekStart DateTime
+  createdAt DateTime @default(now())
+  projectId String
+
+  project   Project  @relation(fields: [projectId], references: [id])
+}
