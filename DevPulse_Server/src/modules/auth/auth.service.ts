@@ -5,6 +5,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from '../../utils/token.utils';
+import jwt from 'jsonwebtoken';
 
 export const registerService = async (data: RegisterInput) => {
   const { name, email, password } = data;
@@ -58,4 +59,47 @@ export const loginService = async (data: LoginInput) => {
   } else {
     throw new Error('Email or password incorrect');
   }
+};
+
+export const refreshTokenService = async (refreshToken: string) => {
+  if (!refreshToken) {
+    throw new Error('Refresh token missing');
+  }
+
+  const decoded = jwt.verify(
+    refreshToken,
+    process.env.JWT_REFRESH_SECRET!,
+  ) as { id: string };
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: decoded.id,
+    },
+  });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  const accessToken = generateAccessToken({
+    id: user.id,
+  });
+
+  return { accessToken };
+};
+
+export const getMeService = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  const { passwordHash, ...safeUser } = user;
+
+  return safeUser;
 };

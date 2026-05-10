@@ -4,6 +4,7 @@ import projectRoutes from './modules/projects/project.routes';
 import metricRoute from './modules/metrics/metric.routes';
 import errorRoute from './modules/errors/error.routes';
 import dotenv from 'dotenv';
+import { errorMiddleware } from './middleware/globalError.middalware';
 
 dotenv.config();
 
@@ -19,5 +20,7 @@ app.use('/v1/api/errors', errorRoute);
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello from TypeScript Backend');
 });
+
+app.use(errorMiddleware)
 
 export default app;
