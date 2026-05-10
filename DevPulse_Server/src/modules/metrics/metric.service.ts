@@ -1,7 +1,14 @@
 import prisma from '../../config/db';
-import { CreateMetricInput } from './metric.schema';
 
-export const createMetricService = (data: CreateMetricInput) => {
+type CreateMetricServiceInput = {
+  endpoint: string;
+  method: string;
+  statusCode: number;
+  duration: number;
+  projectId: string;
+};
+
+export const createMetricService = (data: CreateMetricServiceInput) => {
   return prisma.metric.create({
     data,
   });

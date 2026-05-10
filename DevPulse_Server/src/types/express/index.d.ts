@@ -6,6 +6,9 @@ declare global {
       user?: {
         id: string;
       };
+      project?: {
+        id: string;
+      };
     }
   }
 }
