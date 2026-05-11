@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import {
   createProjectController,
+  deleteProjectController,
   getProjectController,
+  getSingleProjectController,
+  rotateApiKeyController,
+  updateProjectController,
 } from './project.controller';
 import { userAuth } from './../../middleware/auth.middleware';
 
@@ -9,7 +13,14 @@ console.log("project route loaded")
 
 const route = Router();
 
-route.post('/create', userAuth, createProjectController);
-route.get('/all', userAuth, getProjectController);
+route.post('/', userAuth, createProjectController);
+route.get('/', userAuth, getProjectController);
+route.get('/:id', userAuth, getSingleProjectController);
+
+route.patch('/:id', userAuth, updateProjectController);
+
+route.delete('/:id', userAuth, deleteProjectController);
+
+route.post('/:id/rotate-key', userAuth, rotateApiKeyController);
 
 export default route

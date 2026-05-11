@@ -12,10 +12,10 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/v1/api/auth', authRoutes);
-app.use('/v1/api/project', projectRoutes);
-app.use('/v1/api/metric', metricRoute);
-app.use('/v1/api/errors', errorRoute);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/projects', projectRoutes);
+app.use('/api/v1/metrics', metricRoute);
+app.use('/api/v1/errors', errorRoute);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello from TypeScript Backend');
