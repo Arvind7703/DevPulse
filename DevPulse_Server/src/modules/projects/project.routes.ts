@@ -9,7 +9,6 @@ import {
 } from './project.controller';
 import { userAuth } from './../../middleware/auth.middleware';
 
-console.log("project route loaded")
 
 const route = Router();
 
